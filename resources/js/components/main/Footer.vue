@@ -23,7 +23,6 @@
     {
       title: 'Tautan Cepat',
       items: [
-        { text: 'Beranda', link: '#' },
         { text: 'Tentang Kami', link: '#' },
         { text: 'Cara Kerja', link: '#' },
         { text: 'Blog', link: '#' }

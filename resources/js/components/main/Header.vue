@@ -10,7 +10,6 @@ const isScrolled = ref(false);
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
-  // Disable scroll ketika menu dibuka
   if (isMenuOpen.value) {
     document.body.style.overflow = 'hidden';
   } else {
@@ -36,7 +35,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
-  // Pastikan untuk mengembalikan overflow ketika komponen di-unmount
   document.body.style.overflow = '';
 });
 </script>
@@ -115,10 +113,49 @@ onUnmounted(() => {
                 {{ item.name }}
               </Link>
             </li>
-            <li>
-              <button class="button" style="width: 100px;">
+            <li class="relative">
+              <button 
+                @click="toggleLoginPopup"
+                class="button" 
+                style="width: 100px;"
+              >
                 <span>Masuk</span>
               </button>
+              
+              <!-- Login Popup -->
+              <transition
+                enter-active-class="transition-all duration-200 ease-out"
+                enter-from-class="opacity-0 translate-y-2"
+                enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition-all duration-150 ease-in"
+                leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 translate-y-2"
+              >
+                <div 
+                  v-if="isLoginPopupOpen" 
+                  class="absolute right-0 mt-2 w-64 bg-slate-800 rounded-lg shadow-xl border border-slate-700 overflow-hidden z-50"
+                >
+                  <div class="p-4">
+                    <h3 class="text-white font-medium text-center mb-3">Masuk Sebagai</h3>
+                    <div class="space-y-2">
+                      <Link 
+                        href="/login" 
+                        class="block w-full text-center button py-2 px-4"
+                        @click="toggleLoginPopup"
+                      >
+                        <span>Pemilik</span>
+                      </Link>
+                      <Link 
+                        href="/login/pencari" 
+                        class="block w-full text-center button pencari-button py-2 px-4"
+                        @click="toggleLoginPopup"
+                      >
+                        <span>Pencari</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </transition>
             </li>
           </ul>
         </nav>
@@ -246,14 +283,14 @@ onUnmounted(() => {
                 </li>
               </div>
               <li class="pt-2">
-                <button class="button w-full py-3 text-lg">
+                <Link href="/login/pemilik" class="button w-full py-3 text-lg block text-center" @click="toggleMenu">
                   <span>Masuk Sebagai Pemilik</span>
-                </button>
+                </Link>
               </li>
               <li>
-                <button class="button pencari-button w-full py-3 text-lg">
+                <Link href="/login/pencari" class="button pencari-button w-full py-3 text-lg block text-center" @click="toggleMenu">
                   <span>Masuk Sebagai Pencari</span>
-                </button>
+                </Link>
               </li>
             </ul>
           </nav>
@@ -364,5 +401,16 @@ nav ul li a:hover::after {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+}
+
+/* Close popup when clicking outside */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
 }
 </style>
